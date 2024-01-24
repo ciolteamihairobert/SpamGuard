@@ -5,6 +5,8 @@ using System.Net;
 using SpamDetector.Features.UserManagement.Register.Dtos;
 using SpamDetector.Features.UserManagement.Register.Commands.AddUser;
 using Microsoft.AspNetCore.Authorization;
+using SpamDetector.Features.UserManagement.Login.Dtos;
+using SpamDetector.Features.UserManagement.Login.Queries.GetUser;
 
 namespace SpamDetector.Controllers
 {
@@ -27,22 +29,13 @@ namespace SpamDetector.Controllers
             return Ok(response);
         }
 
-        //[HttpPost("login")]
-        //public async Task<ActionResult<string>> Login(UserLoginDto request)
-        //{
-        //    if(user.UserName != request.UserName)
-        //    {
-        //        return BadRequest("User not found");
-        //    }
-
-        //    if(!VerifyPasswordHash(request.Password,user.PassWordHash,user.PassWordSalt))
-        //    {
-        //        return BadRequest("Bad Password");
-        //    }
-
-        //    string token = CreateToken(user);
-        //    return Ok(token);
-        //}
+        [HttpPost("login"), AllowAnonymous]
+        [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
+        public async Task<ActionResult<string>> Login(UserLoginDto user)
+        {
+            var response = await _mediatR.Send(new GetUserQuery() { User = user });
+            return Ok(response);
+        }
 
     }
 }

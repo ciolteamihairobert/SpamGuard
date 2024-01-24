@@ -32,7 +32,6 @@
 
   <ItemGroup>
     <Folder Include="Features\UserManagement\Login\Commands\" />
-    <Folder Include="Features\UserManagement\Login\Queries\" />
     <Folder Include="Features\UserManagement\Register\Queries\" />
   </ItemGroup>
 
