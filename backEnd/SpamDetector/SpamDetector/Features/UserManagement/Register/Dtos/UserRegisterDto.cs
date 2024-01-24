@@ -9,6 +9,7 @@ namespace SpamDetector.Features.UserManagement.Register.Dtos
         public string Email { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
+        public string Role { get; set; }
 
         public static explicit operator User(UserRegisterDto useerDto)
         {
@@ -17,7 +18,8 @@ namespace SpamDetector.Features.UserManagement.Register.Dtos
                 FirstName = useerDto.FirstName,
                 LastName = useerDto.LastName,
                 Email = useerDto.Email,
-                UserName = useerDto.UserName
+                UserName = useerDto.UserName,
+                Role = useerDto.Role,
             };
         }
     }

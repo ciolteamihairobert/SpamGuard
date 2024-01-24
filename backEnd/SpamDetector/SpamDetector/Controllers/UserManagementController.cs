@@ -4,11 +4,13 @@ using SpamDetector.Models.UserManagement;
 using System.Net;
 using SpamDetector.Features.UserManagement.Register.Dtos;
 using SpamDetector.Features.UserManagement.Register.Commands.AddUser;
+using Microsoft.AspNetCore.Authorization;
 
 namespace SpamDetector.Controllers
 {
     [Route("api/Auth")]
     [ApiController]
+    [Authorize]
     public class UserManagementController : ControllerBase
     {
         private readonly IMediator _mediatR;
@@ -17,7 +19,7 @@ namespace SpamDetector.Controllers
             _mediatR = mediatR;
         }
 
-        [HttpPost("register")]
+        [HttpPost("register"), AllowAnonymous]
         [ProducesResponseType(typeof(User), (int)HttpStatusCode.OK)]
         public async Task<ActionResult> Register([FromBody] UserRegisterDto newUser)
         {
