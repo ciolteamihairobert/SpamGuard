@@ -23,17 +23,21 @@ namespace SpamDetector.Features.UserManagement.Register.Commands.AddUser
                 throw new Exception($"The user with username: {request.NewUser.UserName} already exists");
             }
 
-            _authService.CreatePasswordHash(request.NewUser.Password, out byte[] passwordHash, out byte[] passwordSalt);
-            
-            User user = (User)request.NewUser;
-            
-            user.PassWordHash = passwordHash;
-            user.PassWordSalt = passwordSalt;
+            if(_authService.ValidatePassword(request.NewUser.Password))
+            {
+                _authService.CreatePasswordHash(request.NewUser.Password, out byte[] passwordHash, out byte[] passwordSalt);
+                User user = (User)request.NewUser;
 
-            await _dataContext.Users.AddAsync(user, cancellationToken);
-            await _dataContext.SaveChangesAsync(cancellationToken);
+                user.PassWordHash = passwordHash;
+                user.PassWordSalt = passwordSalt;
 
-            return user;
+                await _dataContext.Users.AddAsync(user, cancellationToken);
+                await _dataContext.SaveChangesAsync(cancellationToken);
+
+                return user;
+            }
+
+            return null;
         }
     }
 }
