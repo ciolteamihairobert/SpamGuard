@@ -33,7 +33,7 @@ namespace SpamDetector.HelpfulServices
         {
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.Name, user.UserName),
+                new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.Role)
             };
 
