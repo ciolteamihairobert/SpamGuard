@@ -17,10 +17,10 @@ namespace SpamDetector.Features.UserManagement.Register.Commands.AddUser
         }
         public async Task<User> Handle(AddUserCommand request, CancellationToken cancellationToken)
         {
-            var isAlreadyInDb = await _dataContext.Users.FirstOrDefaultAsync(u => u.UserName == request.NewUser.UserName);
+            var isAlreadyInDb = await _dataContext.Users.FirstOrDefaultAsync(u => u.Email == request.NewUser.Email);
             if (isAlreadyInDb is not null)
             {
-                throw new Exception($"The user with username: {request.NewUser.UserName} already exists");
+                throw new Exception($"The user with username: {request.NewUser.Email} already exists");
             }
 
             if(_authService.ValidatePassword(request.NewUser.Password))
