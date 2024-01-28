@@ -10,14 +10,17 @@ namespace SpamDetector.HelpfulServices
     public class AuthService : IAuthService
     {
         private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
         private static readonly Regex hasNumber = new Regex(@"[0-9]+");
         private static readonly Regex hasUpperChar = new Regex(@"[A-Z]+");
         private static readonly Regex hasMiniMaxChars = new Regex(@".{8,15}");
         private static readonly Regex hasLowerChar = new Regex(@"[a-z]+");
         private static readonly Regex hasSymbols = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]");
-        public AuthService(IConfiguration configuration)
+        public AuthService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
@@ -41,7 +44,7 @@ namespace SpamDetector.HelpfulServices
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(1),
+                expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: credentials);
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
@@ -85,5 +88,29 @@ namespace SpamDetector.HelpfulServices
             return valid;
         }
 
+        public RefreshToken GenerateRefreshToken(User user)
+        {
+            var refreshToken = new RefreshToken
+            {
+                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                ExpirationDate = DateTime.Now.AddDays(7),
+                CreationDate = DateTime.Now,
+                User = user,
+                UserEmail = user.Email
+            };
+
+            return refreshToken;
+        }
+
+        public void SetRefreshToken(RefreshToken refreshToken)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = refreshToken.ExpirationDate
+            };
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken",
+                refreshToken.Token, cookieOptions);
+        }
     }
 }
