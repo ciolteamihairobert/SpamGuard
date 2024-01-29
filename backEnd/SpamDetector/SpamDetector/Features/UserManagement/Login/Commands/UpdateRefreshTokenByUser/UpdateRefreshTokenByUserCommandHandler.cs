@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SpamDetector.Data;
 using SpamDetector.Features.UserManagement.Login.Commands.UpdateRefreshToken;
 using SpamDetector.Features.UserManagement.Login.Commands.UpdateRefreshTokenByUser;
-using SpamDetector.HelpfulServices;
+using SpamDetector.HelpfulServices.AuthenticationService;
 
 namespace SpamDetector.Features.UserManagement.Login.Commands.UpdateRTByUser
 {

@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SpamDetector.Data;
 using SpamDetector.Features.UserManagement.Login.Commands.AddRefreshToken;
 using SpamDetector.Features.UserManagement.Login.Commands.DeleteRefreshToken;
-using SpamDetector.HelpfulServices;
+using SpamDetector.HelpfulServices.AuthenticationService;
 
 namespace SpamDetector.Features.UserManagement.Login.Queries.GetUser
 {

@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SpamDetector.Data;
-using SpamDetector.HelpfulServices;
+using SpamDetector.HelpfulServices.AuthenticationService;
 using SpamDetector.Models.UserManagement;
 
 namespace SpamDetector.Features.UserManagement.Login.Commands.AddRefreshToken
