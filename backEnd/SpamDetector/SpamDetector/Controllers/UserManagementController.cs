@@ -5,8 +5,8 @@ using System.Net;
 using SpamDetector.Features.UserManagement.Register.Dtos;
 using SpamDetector.Features.UserManagement.Register.Commands.AddUser;
 using Microsoft.AspNetCore.Authorization;
-using SpamDetector.Features.UserManagement.Login.Dtos;
 using SpamDetector.Features.UserManagement.Login.Queries.GetUser;
+using SpamDetector.Features.UserManagement.Login.Commands.UpdateRefreshTokenByUser;
 
 namespace SpamDetector.Controllers
 {
@@ -31,11 +31,18 @@ namespace SpamDetector.Controllers
 
         [HttpPost("login"), AllowAnonymous]
         [ProducesResponseType(typeof(string), (int)HttpStatusCode.OK)]
-        public async Task<ActionResult<string>> Login(UserLoginDto user)
+        public async Task<ActionResult<string>> Login([FromBody] UserLogin user)
         {
             var response = await _mediatR.Send(new GetUserQuery() { User = user });
             return Ok(response);
         }
 
+        [HttpPost("refresh-token"), AllowAnonymous]
+        [ProducesResponseType((int)HttpStatusCode.OK)]
+        public async Task<ActionResult> RefreshToken([FromBody] UserLogin user)
+        {
+            await _mediatR.Send(new UpdateRefreshTokenByUserCommand() { User = user });
+            return Ok();
+        }
     }
 }

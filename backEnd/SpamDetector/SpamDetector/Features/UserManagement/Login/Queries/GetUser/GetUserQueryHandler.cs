@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SpamDetector.Data;
+using SpamDetector.Features.UserManagement.Login.Commands.AddRefreshToken;
+using SpamDetector.Features.UserManagement.Login.Commands.DeleteRefreshToken;
 using SpamDetector.HelpfulServices;
 
 namespace SpamDetector.Features.UserManagement.Login.Queries.GetUser
@@ -9,10 +11,12 @@ namespace SpamDetector.Features.UserManagement.Login.Queries.GetUser
     {
         private readonly DataContext _dataContext;
         private readonly AuthService _authService;
-        public GetUserQueryHandler(DataContext dataContext, AuthService authService)
+        private readonly IMediator _mediator;
+        public GetUserQueryHandler(DataContext dataContext, AuthService authService, IMediator mediatR)
         {
             _dataContext = dataContext;
             _authService = authService;
+            _mediator = mediatR;
         }
 
         public async Task<string> Handle(GetUserQuery request, CancellationToken cancellationToken)
@@ -30,6 +34,10 @@ namespace SpamDetector.Features.UserManagement.Login.Queries.GetUser
             {
                 throw new Exception($"The password for the user with username: {request.User.Email} is incorrect.");
             }
+            await _mediator.Send(new DeleteRefreshTokenCommand() { User =  isAlreadyInDb });
+
+            var refreshToken =  await _mediator.Send(new AddRefreshTokenCommand() { User = isAlreadyInDb });
+            _authService.SetRefreshToken(refreshToken);
 
             return _authService.CreateToken(isAlreadyInDb);
         }
