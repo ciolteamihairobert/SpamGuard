@@ -1,6 +1,6 @@
-﻿namespace SpamDetector.Features.UserManagement.Login.Dtos
+﻿namespace SpamDetector.Models.UserManagement
 {
-    public class UserLoginDto
+    public class UserLogin
     {
         public string Email { get; set; } = string.Empty;
         public string Password { get; set; } = string.Empty;
