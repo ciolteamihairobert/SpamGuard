@@ -1,6 +1,6 @@
 ﻿using SpamDetector.Models.UserManagement;
 
-namespace SpamDetector.HelpfulServices
+namespace SpamDetector.HelpfulServices.AuthenticationService
 {
     public interface IAuthService
     {

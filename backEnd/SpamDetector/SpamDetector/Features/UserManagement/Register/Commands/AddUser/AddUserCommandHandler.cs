@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SpamDetector.Data;
-using SpamDetector.HelpfulServices;
+using SpamDetector.HelpfulServices.AuthenticationService;
+using SpamDetector.HelpfulServices.EmailSenderService;
 using SpamDetector.Models.UserManagement;
 
 namespace SpamDetector.Features.UserManagement.Register.Commands.AddUser
@@ -10,10 +11,12 @@ namespace SpamDetector.Features.UserManagement.Register.Commands.AddUser
     {
         private readonly DataContext _dataContext;
         private readonly AuthService _authService;
-        public AddUserCommandHandler(DataContext dataContext, AuthService authService)
+        private readonly IEmailSenderService _emailSenderService;
+        public AddUserCommandHandler(DataContext dataContext, AuthService authService, IEmailSenderService emailSenderService)
         {
             _dataContext = dataContext;
             _authService = authService;
+            _emailSenderService = emailSenderService;
         }
         public async Task<User> Handle(AddUserCommand request, CancellationToken cancellationToken)
         {
@@ -34,7 +37,10 @@ namespace SpamDetector.Features.UserManagement.Register.Commands.AddUser
                 await _dataContext.Users.AddAsync(user, cancellationToken);
                 await _dataContext.SaveChangesAsync(cancellationToken);
 
-                return user;
+                if (_emailSenderService.SendEmail(request.NewUser))
+                {
+                    return user;
+                }
             }
 
             return null;

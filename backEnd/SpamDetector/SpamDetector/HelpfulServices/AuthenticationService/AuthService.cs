@@ -5,7 +5,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
-namespace SpamDetector.HelpfulServices
+namespace SpamDetector.HelpfulServices.AuthenticationService
 {
     public class AuthService : IAuthService
     {
@@ -18,7 +18,7 @@ namespace SpamDetector.HelpfulServices
         private static readonly Regex hasMiniMaxChars = new Regex(@".{8,15}");
         private static readonly Regex hasLowerChar = new Regex(@"[a-z]+");
         private static readonly Regex hasSymbols = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]");
-        private static readonly Regex checkEmail = new Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$"); 
+        private static readonly Regex checkEmail = new Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
         #endregion
         public AuthService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
@@ -77,12 +77,13 @@ namespace SpamDetector.HelpfulServices
 
             return valid;
         }
-        
+
         private static bool ValidateCondition(string input, Regex regex, string errorMessage, bool valid)
         {
             if (regex is not null)
             {
-                if (!regex.IsMatch(input)){
+                if (!regex.IsMatch(input))
+                {
                     valid = false;
                     throw new Exception(errorMessage);
                 }
