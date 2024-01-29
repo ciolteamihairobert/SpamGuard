@@ -23,7 +23,7 @@ namespace SpamDetector.Features.UserManagement.Register.Commands.AddUser
                 throw new Exception($"The user with username: {request.NewUser.Email} already exists");
             }
 
-            if(_authService.ValidatePassword(request.NewUser.Password))
+            if(_authService.ValidatePassword(request.NewUser.Password) && _authService.ValidateEmail(request.NewUser.Email))
             {
                 _authService.CreatePasswordHash(request.NewUser.Password, out byte[] passwordHash, out byte[] passwordSalt);
                 User user = (User)request.NewUser;
