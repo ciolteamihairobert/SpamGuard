@@ -37,24 +37,13 @@ namespace SpamDetector.HelpfulServices.EmailSenderService
 
         public void CreateMailStructure(UserRegisterDto user)
         {
+            var emailBody = new EmailBody(user);
             _email.From.Add(MailboxAddress.Parse(_configuration.GetSection("SenderService:EmailUserName").Value));
             _email.To.Add(MailboxAddress.Parse(user.Email));
             _email.Subject = "Welcome to Spam Guard!";
             _email.Body = new TextPart(TextFormat.Html)
             {
-                Text = $@"
-                      <html>
-                          <body>
-                              <h2><b>Welcome, {user.FirstName} {user.LastName}!</b></h2>
-                              <p>Your account has been created.</p>
-                              <p>The credentials are: <br>
-                               UserName: {user.Email} <br>
-                               Password: {user.Password} </p>
-                              <p>If you have any questions fell free and reach out to spam.guard.co@gmail.com </p>
-                              Sincerely,
-                              <p><b>Spam Guard</b></p>
-                          </body>
-                      </html>"
+                Text = emailBody.GetWelcomeEmailBody()
             };   
         }
     }
