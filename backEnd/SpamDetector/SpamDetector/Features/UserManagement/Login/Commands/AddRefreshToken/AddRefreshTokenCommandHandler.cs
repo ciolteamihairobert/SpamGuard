@@ -25,7 +25,6 @@ namespace SpamDetector.Features.UserManagement.Login.Commands.AddRefreshToken
             }
 
             RefreshToken refreshToken = _authService.GenerateRefreshToken(isUserInDb);
-            refreshToken.UserEmail = isUserInDb.Email;
 
             await _dataContext.RefreshTokens.AddAsync(refreshToken, cancellationToken);
             await _dataContext.SaveChangesAsync(cancellationToken);

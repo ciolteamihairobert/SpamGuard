@@ -32,7 +32,7 @@ namespace SpamDetector.Features.UserManagement.Login.Commands.UpdateRTByUser
                 rt => rt.User.Email == userFromDb.Email, cancellationToken);
             if (isTokenInDb is null)
             {
-                throw new Exception($"The token {userFromDb.RefreshToken.Token} does not exist.");
+                throw new Exception($"The token does not exist.");
             }
 
             if (!isTokenInDb.Token.Equals(refreshToken))

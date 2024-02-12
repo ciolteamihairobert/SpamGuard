@@ -37,6 +37,7 @@ namespace SpamDetector.Features.UserManagement.Login.Queries.GetUser
             await _mediator.Send(new DeleteRefreshTokenCommand() { User =  isAlreadyInDb });
 
             var refreshToken =  await _mediator.Send(new AddRefreshTokenCommand() { User = isAlreadyInDb });
+
             _authService.SetRefreshToken(refreshToken);
 
             return _authService.CreateToken(isAlreadyInDb);
