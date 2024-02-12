@@ -13,5 +13,6 @@ namespace SpamDetector.Models.UserManagement
         public byte[] PassWordHash { get; set; }
         public byte[] PassWordSalt { get; set; }
         public RefreshToken RefreshToken { get; set; }
+        public PasswordResetToken PasswordResetToken { get; set; }
     }
 }
