@@ -12,18 +12,20 @@ namespace SpamDetector.Features.UserManagement.Register.Commands.AddUser
         private readonly DataContext _dataContext;
         private readonly AuthService _authService;
         private readonly IEmailSenderService _emailSenderService;
-        public AddUserCommandHandler(DataContext dataContext, AuthService authService, IEmailSenderService emailSenderService)
+        private readonly IMediator _mediator;
+        public AddUserCommandHandler(DataContext dataContext, AuthService authService, IEmailSenderService emailSenderService, IMediator mediator)
         {
             _dataContext = dataContext;
             _authService = authService;
             _emailSenderService = emailSenderService;
+            _mediator = mediator;
         }
         public async Task<User> Handle(AddUserCommand request, CancellationToken cancellationToken)
         {
             var isAlreadyInDb = await _dataContext.Users.FirstOrDefaultAsync(u => u.Email == request.NewUser.Email);
             if (isAlreadyInDb is not null)
             {
-                throw new Exception($"The user with username: {request.NewUser.Email} already exists");
+                throw new Exception($"The user with username: {request.NewUser.Email} already exists.");
             }
 
             if(_authService.ValidatePassword(request.NewUser.Password) && _authService.ValidateEmail(request.NewUser.Email))
@@ -37,7 +39,7 @@ namespace SpamDetector.Features.UserManagement.Register.Commands.AddUser
                 await _dataContext.Users.AddAsync(user, cancellationToken);
                 await _dataContext.SaveChangesAsync(cancellationToken);
 
-                if (_emailSenderService.SendEmail(request.NewUser))
+                if (_emailSenderService.SendWelcomeEmail(request.NewUser))
                 {
                     return user;
                 }

@@ -1,4 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using SpamDetector.Features.UserManagement.Register.Dtos;
 using SpamDetector.Models.UserManagement;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -63,6 +64,7 @@ namespace SpamDetector.HelpfulServices.AuthenticationService
             }
         }
         #endregion
+
         #region Validate Password
         public bool ValidatePassword(string password)
         {
@@ -96,6 +98,7 @@ namespace SpamDetector.HelpfulServices.AuthenticationService
             return valid;
         }
         #endregion
+
         #region Validate Email
         public bool ValidateEmail(string email)
         {
@@ -108,6 +111,7 @@ namespace SpamDetector.HelpfulServices.AuthenticationService
         }
 
         #endregion
+
         #region Refresh Token
         public RefreshToken GenerateRefreshToken(User user)
         {
@@ -134,5 +138,21 @@ namespace SpamDetector.HelpfulServices.AuthenticationService
                 refreshToken.Token, cookieOptions);
         }
         #endregion
+
+        #region Password Reset Token
+        public PasswordResetToken GetPasswordResetToken(User user)
+        {
+            var passwordResetToken = new PasswordResetToken
+            {
+                Token = Convert.ToHexString(RandomNumberGenerator.GetBytes(64)),
+                ExpirationDate = DateTime.Now.AddMinutes(5),
+                User = user,
+                UserEmail = user.Email
+            };
+
+            return passwordResetToken;
+        }
+        #endregion
+
     }
 }

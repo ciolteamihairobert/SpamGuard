@@ -9,5 +9,6 @@ namespace SpamDetector.HelpfulServices.AuthenticationService
         bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] passwordSalt);
         RefreshToken GenerateRefreshToken(User user);
         void SetRefreshToken(RefreshToken refreshToken);
+        PasswordResetToken GetPasswordResetToken(User user);
     }
 }

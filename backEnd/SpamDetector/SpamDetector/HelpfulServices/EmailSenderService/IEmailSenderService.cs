@@ -1,10 +1,11 @@
 ﻿using SpamDetector.Features.UserManagement.Register.Dtos;
+using SpamDetector.Models.UserManagement;
 
 namespace SpamDetector.HelpfulServices.EmailSenderService
 {
     public interface IEmailSenderService
     {
-        bool SendEmail(UserRegisterDto user);
-        void CreateMailStructure(UserRegisterDto user);
+        bool SendWelcomeEmail(UserRegisterDto user);
+        bool SendResetPasswordEmail(UserPasswordReset user);
     }
 }

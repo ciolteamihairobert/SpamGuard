@@ -21,7 +21,7 @@ namespace SpamDetector.Features.UserManagement.Login.Commands.UpdateRefreshToken
             var isTokenInDb = await _dataContext.RefreshTokens.FirstOrDefaultAsync(rt => rt.UserEmail == request.User.Email, cancellationToken);
             if (isTokenInDb is null)
             {
-                throw new Exception($"The token {request.User.RefreshToken} does not exist.");
+                throw new Exception($"The token does not exist.");
             }
 
             var newRefreshToken = _authService.GenerateRefreshToken(request.User);
