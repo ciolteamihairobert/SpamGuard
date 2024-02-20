@@ -1,25 +1,32 @@
 ﻿using Microsoft.IdentityModel.Tokens;
+using SpamDetector.Features.UserManagement.Register.Dtos;
 using SpamDetector.Models.UserManagement;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
-namespace SpamDetector.HelpfulServices
+namespace SpamDetector.HelpfulServices.AuthenticationService
 {
     public class AuthService : IAuthService
     {
         private readonly IConfiguration _configuration;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        #region Validation Regexes
         private static readonly Regex hasNumber = new Regex(@"[0-9]+");
         private static readonly Regex hasUpperChar = new Regex(@"[A-Z]+");
         private static readonly Regex hasMiniMaxChars = new Regex(@".{8,15}");
         private static readonly Regex hasLowerChar = new Regex(@"[a-z]+");
         private static readonly Regex hasSymbols = new Regex(@"[!@#$%^&*()_+=\[{\]};:<>|./?,-]");
-        public AuthService(IConfiguration configuration)
+        private static readonly Regex checkEmail = new Regex("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$");
+        #endregion
+        public AuthService(IConfiguration configuration, IHttpContextAccessor httpContextAccessor)
         {
             _configuration = configuration;
+            _httpContextAccessor = httpContextAccessor;
         }
-
+        #region Password Hashing
         public void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)
         {
             using (var hmac = new HMACSHA512())
@@ -41,7 +48,7 @@ namespace SpamDetector.HelpfulServices
             var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(1),
+                expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: credentials);
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);
 
@@ -56,16 +63,14 @@ namespace SpamDetector.HelpfulServices
                 return computedHash.SequenceEqual(passwordHash);
             }
         }
+        #endregion
 
+        #region Validate Password
         public bool ValidatePassword(string password)
         {
             var valid = true;
-            if (string.IsNullOrWhiteSpace(password))
-            {
-                valid = false;
-                throw new Exception("Password should not be empty");
-            }
-            
+
+            ValidateCondition(password, null, "Password should not be empty.", valid);
             ValidateCondition(password, hasLowerChar, "Password should contain at least one lower case letter.", valid);
             ValidateCondition(password, hasUpperChar, "Password should contain at least one upper case letter.", valid);
             ValidateCondition(password, hasMiniMaxChars, "Password should not be lesser than 8 or greater than 15 characters.", valid);
@@ -75,15 +80,79 @@ namespace SpamDetector.HelpfulServices
             return valid;
         }
 
-        private static bool ValidateCondition(string password, Regex regex, string errorMessage, bool valid)
+        private static bool ValidateCondition(string input, Regex regex, string errorMessage, bool valid)
         {
-            if (!regex.IsMatch(password))
+            if (regex is not null)
+            {
+                if (!regex.IsMatch(input))
+                {
+                    valid = false;
+                    throw new Exception(errorMessage);
+                }
+            }
+            else if (string.IsNullOrWhiteSpace(input))
             {
                 valid = false;
                 throw new Exception(errorMessage);
             }
             return valid;
         }
+        #endregion
+
+        #region Validate Email
+        public bool ValidateEmail(string email)
+        {
+            var valid = true;
+
+            ValidateCondition(email, null, "Email should not be empty.", valid);
+            ValidateCondition(email, checkEmail, "This is not a valid form for an email.", valid);
+
+            return valid;
+        }
+
+        #endregion
+
+        #region Refresh Token
+        public RefreshToken GenerateRefreshToken(User user)
+        {
+            var refreshToken = new RefreshToken
+            {
+                Token = Convert.ToBase64String(RandomNumberGenerator.GetBytes(64)),
+                ExpirationDate = DateTime.Now.AddDays(7),
+                CreationDate = DateTime.Now,
+                User = user,
+                UserEmail = user.Email
+            };
+
+            return refreshToken;
+        }
+
+        public void SetRefreshToken(RefreshToken refreshToken)
+        {
+            var cookieOptions = new CookieOptions
+            {
+                HttpOnly = true,
+                Expires = refreshToken.ExpirationDate
+            };
+            _httpContextAccessor.HttpContext.Response.Cookies.Append("refreshToken",
+                refreshToken.Token, cookieOptions);
+        }
+        #endregion
+
+        #region Password Reset Token
+        public PasswordResetToken GetPasswordResetToken(User user)
+        {
+            var passwordResetToken = new PasswordResetToken
+            {
+                Token = Convert.ToHexString(RandomNumberGenerator.GetBytes(64)),
+                ExpirationDate = DateTime.Now.AddMinutes(5),
+                User = user,
+                UserEmail = user.Email
+            };
+
+            return passwordResetToken;
+        }
+        #endregion
 
     }
 }

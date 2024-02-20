@@ -1,7 +1,8 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SpamDetector.Data;
-using SpamDetector.HelpfulServices;
+using SpamDetector.HelpfulServices.AuthenticationService;
+using SpamDetector.HelpfulServices.EmailSenderService;
 using SpamDetector.Models.UserManagement;
 
 namespace SpamDetector.Features.UserManagement.Register.Commands.AddUser
@@ -10,20 +11,24 @@ namespace SpamDetector.Features.UserManagement.Register.Commands.AddUser
     {
         private readonly DataContext _dataContext;
         private readonly AuthService _authService;
-        public AddUserCommandHandler(DataContext dataContext, AuthService authService)
+        private readonly IEmailSenderService _emailSenderService;
+        private readonly IMediator _mediator;
+        public AddUserCommandHandler(DataContext dataContext, AuthService authService, IEmailSenderService emailSenderService, IMediator mediator)
         {
             _dataContext = dataContext;
             _authService = authService;
+            _emailSenderService = emailSenderService;
+            _mediator = mediator;
         }
         public async Task<User> Handle(AddUserCommand request, CancellationToken cancellationToken)
         {
             var isAlreadyInDb = await _dataContext.Users.FirstOrDefaultAsync(u => u.Email == request.NewUser.Email);
             if (isAlreadyInDb is not null)
             {
-                throw new Exception($"The user with username: {request.NewUser.Email} already exists");
+                throw new Exception($"The user with username: {request.NewUser.Email} already exists.");
             }
 
-            if(_authService.ValidatePassword(request.NewUser.Password))
+            if(_authService.ValidatePassword(request.NewUser.Password) && _authService.ValidateEmail(request.NewUser.Email))
             {
                 _authService.CreatePasswordHash(request.NewUser.Password, out byte[] passwordHash, out byte[] passwordSalt);
                 User user = (User)request.NewUser;
@@ -34,7 +39,10 @@ namespace SpamDetector.Features.UserManagement.Register.Commands.AddUser
                 await _dataContext.Users.AddAsync(user, cancellationToken);
                 await _dataContext.SaveChangesAsync(cancellationToken);
 
-                return user;
+                if (_emailSenderService.SendWelcomeEmail(request.NewUser))
+                {
+                    return user;
+                }
             }
 
             return null;

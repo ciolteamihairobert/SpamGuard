@@ -12,9 +12,11 @@
 
   <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.4.4" />
+    <PackageReference Include="MailKit" Version="4.3.0" />
     <PackageReference Include="MediatR" Version="12.1.1" />
     <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.26" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.10" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="7.0.10">
       <PrivateAssets>all</PrivateAssets>
@@ -31,8 +33,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Features\UserManagement\Login\Commands\" />
+    <Folder Include="Features\UserManagement\Login\Dtos\" />
     <Folder Include="Features\UserManagement\Register\Queries\" />
+    <Folder Include="Features\UserManagement\ResetPassword\Dtos\" />
+    <Folder Include="Features\UserManagement\ResetPassword\Queries\" />
   </ItemGroup>
 
 </Project>

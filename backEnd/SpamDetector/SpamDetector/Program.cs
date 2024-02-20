@@ -3,17 +3,17 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using SpamDetector.Data;
-using SpamDetector.HelpfulServices;
+using SpamDetector.HelpfulServices.AuthenticationService;
+using SpamDetector.HelpfulServices.EmailSenderService;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
 {
@@ -29,6 +29,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 builder.Services.AddScoped<AuthService>();
+builder.Services.AddScoped<IEmailSenderService, EmailSenderService>();
 builder.Services.AddMediatR(x => x.RegisterServicesFromAssemblies(typeof(Program).Assembly));
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(
     options =>
@@ -46,10 +47,15 @@ builder.Services.AddCors(options => options.AddPolicy(name: "NgOrigins",
     {
         policy.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader();
     }));
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddControllers().AddNewtonsoftJson(options =>
+{
+    options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+});
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
