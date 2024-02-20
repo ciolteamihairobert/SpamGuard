@@ -12,16 +12,15 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent {
+
+export class AppComponent{
+  public userLogin = new UserLogin();
 
   constructor(private authService: AuthService) {}
-  public userLogin = new UserLogin();
   login(user: UserLogin){
     this.authService.login(user).subscribe((token : string) =>{
       localStorage.setItem('authToken', token);
       console.log(token);
-    });
-    
+    });  
   }
-
 }

@@ -18,6 +18,10 @@ nav{
     background-color: #7C72FF;
 }
 
+.btn#signup2:hover {
+    background-color: rgb(51, 179, 174);
+}
+
 .container {
   max-width: 100%;
   display: flex;
