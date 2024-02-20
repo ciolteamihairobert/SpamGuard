@@ -1,0 +1,68 @@
+nav{
+    min-height: 5vh;
+    max-height: 5vh;
+    height: 5vh;
+    padding: 2rem;
+    border-bottom: 1px solid #ffffff;
+}
+
+.btn#signin{
+    color:white;
+}
+
+.btn#signin:hover {
+    color:darkgrey;
+}
+
+.btn#signup1:hover {
+    background-color: #7C72FF;
+}
+
+.btn#signup2:hover {
+    background-color: rgb(51, 179, 174);
+}
+
+.container {
+  max-width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  z-index: 0;
+}
+
+body {
+  margin:0;
+  height: 100vh;
+  flex-direction: column;
+  font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.design{
+    background: linear-gradient(transparent, #7C72FF 30%);
+    width:2px;
+    height: 500px;
+}
+
+.design2 {
+  background: linear-gradient(rgb(63, 185, 80), rgb(46, 160, 67), transparent);
+  width:2px;
+  height: 500px;
+}
+
+.design3 {
+    background: linear-gradient(rgb(51, 179, 174) 40%, transparent);
+    width:2px;
+    height: 500px;
+}
+
+.info {
+    color: #7C72FF;
+}
+
+.info2{
+    color:rgb(63, 185, 80);
+}
+
+.info3 {
+    color:rgb(51, 179, 174);
+}
