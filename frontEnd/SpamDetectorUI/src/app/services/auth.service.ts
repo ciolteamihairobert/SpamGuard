@@ -4,6 +4,7 @@ import { UserRegister } from '../models/userRegister';
 import { Observable } from 'rxjs';
 import { User } from '../models/user';
 import { UserLogin } from '../models/userLogin';
+import { UserPasswordReset } from '../models/userResetPassword';
 
 @Injectable({
   providedIn: 'root'
@@ -25,4 +26,22 @@ export class AuthService {
         responseType: 'text'
     });
   }
+
+  public forgotPassword(email: string) : Observable<any> {
+    const url = 'https://localhost:7062/api/Auth/forgot-password';
+    const params = { email: email };
+
+    return this.httpClient.post(url, {}, { params });
+  }
+
+  public resetPassword(user: UserPasswordReset) : Observable<any> {
+    return this.httpClient.post(
+      'https://localhost:7062/api/Auth/reset-password', user);
+  }
+
+  public refreshToken(user: UserLogin) : Observable<any> {
+    return this.httpClient.post(
+      'https://localhost:7062/api/Auth/refresh-token', user);
+  }
+
 }

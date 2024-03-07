@@ -14,9 +14,7 @@
           <label class="label-link" id="forgotPassword" (click)="openForgotPassword()">Forgot password?</label>
         </div>
         <input type="password" class="form-control" id="inputPassword" placeholder="Password" formControlName="password">
-        <div class="invalid-feedback">
-          <small id="passwordHelpBlock" class="form-text text-muted"></small>
-        </div>
+        <small id="emailHelp" class="form-text text-white">Must contain mininum 8 characters<br>(lower case & upper case & numeric & special characters).</small>
       </div>
       <div class="form-group py-1" style="display: flex; flex-direction: column;">
         <button type="submit" class="btn btn-secondary btn-block" (click)="login()">Sign In</button>
