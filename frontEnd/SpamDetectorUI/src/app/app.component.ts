@@ -9,6 +9,7 @@ import { MatDialog, MatDialogConfig, MatDialogModule } from '@angular/material/d
 import { MatButtonModule } from '@angular/material/button';
 import { SigninComponent } from './signin/signin.component';
 import { ModalSize } from './sizeConfig';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
 
 @Injectable({
   providedIn: 'root',
@@ -42,6 +43,10 @@ export class AppComponent{
 
   openSignInModal(){
     this.openModal(SigninComponent, this.size.configSmallSI, this.size.configLargeSI);
+  }
+
+  openPasswordResetModal(){
+    this.openModal(ResetPasswordComponent, this.size.configSmallSI, this.size.configLargeSI);
   }
 
   login(user: UserLogin){
