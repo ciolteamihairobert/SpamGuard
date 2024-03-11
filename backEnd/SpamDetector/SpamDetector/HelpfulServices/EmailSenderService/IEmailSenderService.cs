@@ -7,5 +7,6 @@ namespace SpamDetector.HelpfulServices.EmailSenderService
     {
         bool SendWelcomeEmail(UserRegisterDto user);
         bool SendResetPasswordEmail(UserPasswordReset user);
+        Task<bool> SendForgotPasswordEmail(string userEmail);
     }
 }

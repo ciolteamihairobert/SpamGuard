@@ -1,0 +1,30 @@
+<mat-dialog-content class="mat-typography" style="background-color: #161b22; max-height:100%;">
+  <div style="display: flex; flex-direction: row; justify-content: space-around;" class="py-2 border border-light rounded p-2 mb-2">
+      <label class="text-white">Sign up to Spam Guard</label>
+  </div>
+  <form [formGroup]="signUpForm" class="border border-light rounded p-2 mb-2" style="background-color: #161b22;">
+    <div class="form-group py-2">
+      <label class="text-white" for="exampleInputFN1">First Name</label>
+      <input type="text" class="form-control" id="inputFN" placeholder="First Name" formControlName="firstName">
+    </div>
+    <div class="form-group py-2">
+      <label class="text-white" for="exampleInputLN1">Last Name</label>
+      <input type="text" class="form-control" id="inputLN" placeholder="Last Name" formControlName="lastName">
+    </div>
+    <div class="form-group py-2">
+      <label class="text-white" for="exampleInputEmail1">Email address</label>
+      <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="Email" formControlName="email">
+    </div>
+    <div class="form-group py-2">
+      <label class="text-white" for="exampleInputPassword1">Password</label>
+      <input type="password" class="form-control" id="inputPassword" placeholder="Password" formControlName="password">
+    </div>
+    <div class="form-group py-1" style="display: flex; flex-direction: column;">
+      <button type="submit" class="btn btn-secondary btn-block" (click)="register()">Sign Up</button>
+    </div>
+  </form>
+  <div style="display: flex; flex-direction: row; justify-content: space-around;" class="py-2 border border-light rounded">
+    <label class="text-white">Already have an account?</label>
+    <label class="label-link" id="register" style="align-self: center;" (click)="openSignin()">Sign in</label>
+  </div>
+</mat-dialog-content>

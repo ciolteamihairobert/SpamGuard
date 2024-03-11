@@ -1,0 +1,25 @@
+<mat-dialog-content class="mat-typography" style="background-color: #161b22;">
+    <div style="display: flex; flex-direction: row; justify-content: space-around;" class="py-2 border border-light rounded p-2 mb-2">
+        <label class="text-white">Sign in to Spam Guard</label>
+    </div>
+    <form [formGroup]="signInForm" class="border border-light rounded p-2 mb-2" style="background-color: #161b22;">
+      <div class="form-group py-2">
+        <label class="text-white" for="exampleInputEmail1">Email address</label>
+        <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="Email" formControlName="email">
+      </div>
+      <div class="form-group py-2">
+        <div style="display:flex; justify-content: space-between;">
+          <label class="text-white" for="exampleInputPassword1">Password</label>
+          <label class="label-link" id="forgotPassword" (click)="openForgotPassword()">Forgot password?</label>
+        </div>
+        <input type="password" class="form-control" id="inputPassword" placeholder="Password" formControlName="password">
+      </div>
+      <div class="form-group py-1" style="display: flex; flex-direction: column;">
+        <button type="submit" class="btn btn-secondary btn-block" (click)="login()">Sign In</button>
+      </div>
+    </form>
+    <div style="display: flex; flex-direction: row; justify-content: space-around;" class="py-2 border border-light rounded">
+      <label class="text-white">New to SpamGuard?</label>
+      <label class="label-link" id="register" style="align-self: center;" (click)="openSignup()">Create an account</label>
+    </div>
+</mat-dialog-content>

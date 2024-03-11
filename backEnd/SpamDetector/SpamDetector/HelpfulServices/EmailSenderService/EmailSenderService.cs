@@ -6,6 +6,7 @@ using MimeKit.Text;
 using Microsoft.Extensions.Configuration;
 using SpamDetector.Features.UserManagement.Register.Dtos;
 using SpamDetector.Models.UserManagement;
+using MediatR;
 
 namespace SpamDetector.HelpfulServices.EmailSenderService
 {
@@ -13,10 +14,11 @@ namespace SpamDetector.HelpfulServices.EmailSenderService
     {
         private readonly IConfiguration _configuration;
         private readonly MimeMessage _email = new MimeMessage();
-
-        public EmailSenderService(IConfiguration configuration)
+        private readonly IMediator _mediator;
+        public EmailSenderService(IConfiguration configuration, IMediator mediator)
         {
             _configuration = configuration;
+            _mediator = mediator;
         }
 
         public bool SendWelcomeEmail(UserRegisterDto user)
@@ -47,6 +49,20 @@ namespace SpamDetector.HelpfulServices.EmailSenderService
             }
         }
 
+        public async Task<bool> SendForgotPasswordEmail(string userEmail)
+        {
+            try
+            {
+                await CreateForgotPasswordMailStructure(userEmail);
+                SendEmail();
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
         private void SendEmail()
         {
             using (var smtp = new SmtpClient())
@@ -60,14 +76,21 @@ namespace SpamDetector.HelpfulServices.EmailSenderService
 
         private void CreateWelcomeMailStructure(UserRegisterDto user)
         {
-            var emailBody = new EmailBody(user, null);
+            var emailBody = new EmailBody(user, null, _mediator);
             ConfigureEmail(user.Email, "Welcome to Spam Guard!", emailBody.GetWelcomeEmailBody());
         }
 
         private void CreateResetPasswordMailStructure(UserPasswordReset user)
         {
-            var emailBody = new EmailBody(null, user);
+            var emailBody = new EmailBody(null, user, _mediator);
             ConfigureEmail(user.Email, "The account credentials have been updated Spam Guard!", emailBody.GetResetPasswordBody());
+        }
+
+        private async Task CreateForgotPasswordMailStructure(string userEmail)
+        {
+            var emailBody = new EmailBody(null, null, _mediator);
+            var body = await emailBody.GetForgotPasswordBody(userEmail);
+            ConfigureEmail(userEmail, "Did you forget your password?", body);
         }
 
         private void ConfigureEmail(string to, string subject, string body)

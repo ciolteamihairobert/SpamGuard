@@ -1,0 +1,8 @@
+.label-link:hover{
+    cursor: pointer;
+    color: #7b72ffa2;
+}
+.label-link {
+    color: #7C72FF;
+    text-decoration: underline;
+}
