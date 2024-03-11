@@ -9,7 +9,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { HttpErrorResponse } from '@angular/common/http';
 
-
 @Component({
   selector: 'app-signin',
   standalone: true,
@@ -19,6 +18,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 })
 export class SigninComponent implements OnInit {
   public signInForm: FormGroup<any> = new FormGroup<any>({});
+  public showSpinner: boolean = false;
 
   constructor(private appComponent: AppComponent,
     private modalRef: MatDialogRef<SigninComponent>,
@@ -44,6 +44,7 @@ export class SigninComponent implements OnInit {
       if (email) {
         this.authService.forgotPassword(email).subscribe({
           next: () => {
+            this.toastr.success('You have been sent an email with instructions!');
             this.appComponent.openPasswordResetModal();
             this.modalRef.close();
           },
@@ -69,6 +70,7 @@ export class SigninComponent implements OnInit {
           next: (token: string) => {
             sessionStorage.setItem('authToken', token);
             this.toastr.success('Log in Success!');
+            this.appComponent.loggedIn = true;
             this.modalRef.close();
             console.log(token);
           },

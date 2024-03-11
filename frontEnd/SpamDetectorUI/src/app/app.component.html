@@ -6,8 +6,9 @@
     </a>
     <div class="collapse navbar-collapse" style="justify-content:flex-end;" id="navbarSupportedContent">
       <form class="form-inline d-flex">
-        <button class="btn" id="signin" style="margin-right: 1rem;" type="submit" (click)="openSignInModal()">Sign in</button>
-        <button class="btn btn-outline-secondary text-white" type="submit" (click)="openSignUpModal()">Sign up</button>
+        <button *ngIf="!loggedIn" class="btn" id="signin" style="margin-right: 1rem;" type="submit" (click)="openSignInModal()">Sign in</button>
+        <button *ngIf="!loggedIn" class="btn btn-outline-secondary text-white" type="submit" (click)="openSignUpModal()">Sign up</button>
+        <button *ngIf="loggedIn" class="btn btn-outline-secondary text-white" type="submit" (click)="openUserMenuModal()">User Logged</button>
       </form>
     </div>
   </nav>

@@ -26,6 +26,7 @@ export class ResetPasswordComponent implements OnInit {
 
   ngOnInit(): void {
     this.resetPasswordForm = this.fb.group({
+      resetCode: [''],
       email: ['', [Validators.required, Validators.email]],
       password: ['', Validators.required],
       passwordConfirmation: ['', Validators.required]
@@ -38,7 +39,9 @@ export class ResetPasswordComponent implements OnInit {
       user.email = this.resetPasswordForm.get('email')?.value;
       user.password = this.resetPasswordForm.get('password')?.value;
       user.passwordConfirmation = this.resetPasswordForm.get('passwordConfirmation')?.value;
-      if(user.password && user.email && user.passwordConfirmation){
+      user.resetCode = this.resetPasswordForm.get('resetCode')?.value;
+
+      if(user.password && user.email && user.passwordConfirmation && user.resetCode) {
         this.authService.resetPassword(user).subscribe({
           next: () => {
             this.toastr.success('Password succesfully reset!');
@@ -46,6 +49,7 @@ export class ResetPasswordComponent implements OnInit {
           },
           error: (error : HttpErrorResponse) => {
             this.toastr.error(error.error,'Password reset failed!!');
+            console.log(error);
           }
         }); 
       }

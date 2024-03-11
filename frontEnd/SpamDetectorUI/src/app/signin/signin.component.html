@@ -6,7 +6,6 @@
       <div class="form-group py-2">
         <label class="text-white" for="exampleInputEmail1">Email address</label>
         <input type="email" class="form-control" id="inputEmail" aria-describedby="emailHelp" placeholder="Email" formControlName="email">
-        <small id="emailHelp" class="form-text text-white">We'll never share your email with anyone else.</small>
       </div>
       <div class="form-group py-2">
         <div style="display:flex; justify-content: space-between;">
@@ -14,7 +13,6 @@
           <label class="label-link" id="forgotPassword" (click)="openForgotPassword()">Forgot password?</label>
         </div>
         <input type="password" class="form-control" id="inputPassword" placeholder="Password" formControlName="password">
-        <small id="emailHelp" class="form-text text-white">Must contain mininum 8 characters<br>(lower case & upper case & numeric & special characters).</small>
       </div>
       <div class="form-group py-1" style="display: flex; flex-direction: column;">
         <button type="submit" class="btn btn-secondary btn-block" (click)="login()">Sign In</button>
