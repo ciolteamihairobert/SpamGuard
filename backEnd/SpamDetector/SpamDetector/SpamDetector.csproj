@@ -36,7 +36,6 @@
     <Folder Include="Features\UserManagement\Login\Dtos\" />
     <Folder Include="Features\UserManagement\Register\Queries\" />
     <Folder Include="Features\UserManagement\ResetPassword\Dtos\" />
-    <Folder Include="Features\UserManagement\ResetPassword\Queries\" />
   </ItemGroup>
 
 </Project>

@@ -26,7 +26,7 @@ namespace SpamDetector.Features.UserManagement.ResetPassword.Commands.UpdatePass
                 throw new Exception($"The account with username: {request.User.Email} does not exist.");
             }
 
-            var isTokenAlreadyInDb = await _dataContext.PasswordResetTokens.FirstOrDefaultAsync(p => p.UserEmail == request.User.Email);
+            var isTokenAlreadyInDb = await _dataContext.PasswordResetTokens.FirstOrDefaultAsync(p => p.UserEmail == request.User.Email && p.Token == request.User.ResetCode);
             if (isTokenAlreadyInDb is not null)
             {
                 if (isTokenAlreadyInDb.ExpirationDate >= DateTime.Now)

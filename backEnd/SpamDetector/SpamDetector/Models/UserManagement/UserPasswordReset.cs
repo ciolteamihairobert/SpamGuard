@@ -7,6 +7,7 @@ namespace SpamDetector.Models.UserManagement
         public string Email { get; set; }
         public string Password { get; set; }
         public string PasswordConfirmation { get; set; }
+        public string ResetCode { get; set; }
 
         public static explicit operator User(UserPasswordReset useerDto)
         {

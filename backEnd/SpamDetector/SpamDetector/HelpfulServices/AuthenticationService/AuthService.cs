@@ -144,7 +144,7 @@ namespace SpamDetector.HelpfulServices.AuthenticationService
         {
             var passwordResetToken = new PasswordResetToken
             {
-                Token = Convert.ToHexString(RandomNumberGenerator.GetBytes(64)),
+                Token = Convert.ToHexString(RandomNumberGenerator.GetBytes(16)),
                 ExpirationDate = DateTime.Now.AddMinutes(5),
                 User = user,
                 UserEmail = user.Email

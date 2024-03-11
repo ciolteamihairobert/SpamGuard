@@ -23,6 +23,12 @@ namespace SpamDetector.Controllers
             _mediatR = mediatR;
         }
 
+        [HttpGet("check-server-status"), AllowAnonymous]
+        public IActionResult CheckServerStatus()
+        {
+            return Ok(new { status = 200, message = "Server is running" });
+        }
+
         [HttpPost("register"), AllowAnonymous]
         [ProducesResponseType(typeof(User), (int)HttpStatusCode.OK)]
         public async Task<ActionResult> Register(UserRegisterDto newUser)

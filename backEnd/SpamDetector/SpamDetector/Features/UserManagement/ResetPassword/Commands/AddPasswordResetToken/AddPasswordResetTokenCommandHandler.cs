@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SpamDetector.Data;
 using SpamDetector.Features.UserManagement.ResetPassword.Commands.UpdatePasswordResetToken;
 using SpamDetector.HelpfulServices.AuthenticationService;
+using SpamDetector.HelpfulServices.EmailSenderService;
 using SpamDetector.Models.UserManagement;
 
 namespace SpamDetector.Features.UserManagement.ResetPassword.Commands.AddPasswordResetToken
@@ -12,11 +13,13 @@ namespace SpamDetector.Features.UserManagement.ResetPassword.Commands.AddPasswor
         private readonly DataContext _dataContext;
         private readonly AuthService _authService;
         private readonly IMediator _mediator;
-        public AddPasswordResetTokenCommandHandler(DataContext dataContext, AuthService authService, IMediator mediator)
+        private readonly IEmailSenderService _emailSenderService;
+        public AddPasswordResetTokenCommandHandler(DataContext dataContext, AuthService authService, IMediator mediator, IEmailSenderService emailSenderService)
         {
             _dataContext = dataContext;
             _authService = authService;
             _mediator = mediator;
+            _emailSenderService = emailSenderService;
         }
 
         public async Task Handle(AddPasswordResetTokenCommand request, CancellationToken cancellationToken)
@@ -34,6 +37,8 @@ namespace SpamDetector.Features.UserManagement.ResetPassword.Commands.AddPasswor
 
                 await _dataContext.PasswordResetTokens.AddAsync(passwordResetToken, cancellationToken);
                 await _dataContext.SaveChangesAsync(cancellationToken);
+
+                await _emailSenderService.SendForgotPasswordEmail(request.Email);
             }
             else
             {
@@ -43,6 +48,8 @@ namespace SpamDetector.Features.UserManagement.ResetPassword.Commands.AddPasswor
 
                     await _dataContext.PasswordResetTokens.AddAsync(passwordResetToken, cancellationToken);
                     await _dataContext.SaveChangesAsync(cancellationToken);
+
+                    await _emailSenderService.SendForgotPasswordEmail(request.Email);
                 }
                 else
                 {
